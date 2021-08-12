@@ -1,7 +1,7 @@
 # Kupio-Pro-League
 ## _The best plugin(I guess) for manage Counter-Strike: Global Offensive 5v5 match_
 
-[!Kaliento](https://kaliento.ru/uploads/kaliento_power.png)]
+[!Kaliento](https://kaliento.ru/uploads/kaliento_power.png)
 
 Kupio Pro League plugin was created the 20th of June 2020 for FUN.
 Really, for fun.
@@ -10,8 +10,8 @@ We had wondered about practice with other teams in skills in that game(omg).
 
 
 ## _But,_ 
-    since I do not really love playing computer games(FPS in first of all)
-    I have decided to post(I am crazy I know) my plugin that I spent about a year of my lifetime because I do not really need it more.
+>Since I do not really love playing computer games(FPS in first of all)
+I have decided to post(I am crazy I know) my plugin that I spent about a year of my lifetime because I do not really need it more.
 
 
 
@@ -48,6 +48,6 @@ We had wondered about practice with other teams in skills in that game(omg).
 
 _That's it!_
 
-## ================ ENJOY ================
-## ====== ❤️ With Love From Russia ❤️ ======
-## ========== © Kaliento Limited =========
+ ================ ENJOY ================
+ ====== ❤️ With Love From Russia ❤️ ======
+ ========== © Kaliento Limited =========
