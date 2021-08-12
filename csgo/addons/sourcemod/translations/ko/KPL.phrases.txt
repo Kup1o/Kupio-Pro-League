@@ -1,0 +1,359 @@
+"Phrases"
+{
+	"KPL Admin Menu"
+	{
+		"ko"	"KPL 관리자의 메뉴"
+	}
+
+	"Manual Captain Question"
+	{
+		"ko"	"선장을 수동으로 선택 하시겠습니까?"
+	}
+
+	"Manual Captain Selection CT"
+	{
+		"ko"	"대테러부대를위한 선장 선택"
+	}
+
+	"Manual Captain Selection T"
+	{
+		"ko"	"태러리스트를위한 선장 선택"
+	}
+
+	"Set Team Menu"
+	{
+		"ko" 	"재배치 가능한 플레이어"
+	}
+
+	"Set Team Select Menu"
+	{
+		"ko"	"어느 팀에?"
+	}
+
+	"Spec Menu"
+	{		"ko"	"재배치 가능한 플레이어"
+	}
+
+	"Swap Menu"
+	{
+		"ko"	"되집 플레이어"
+	}
+
+	"Exchange Players Menu"
+	{
+		"ko"	"교환 플레이어"
+	}
+
+	"Exchange Players With Menu"
+	{
+		"ko"	"교환 플레이어"
+	}
+
+	"Set Game Mode Menu"
+	{
+		"ko"	"게임 모드 설정 메뉴"
+	}
+
+
+	"CT"
+	{
+		"ko"	"대테러부대"
+	}
+
+
+	"T"
+	{
+		"ko"	"테러리스트"
+	}
+
+
+	"SPEC"
+	{
+		"ko"	"관찰자"
+	}
+
+	"yes"
+	{
+		"ko"	"네"
+	}
+
+	"no"
+	{
+		"ko"	"아니요"
+	}
+
+	"Start Warmup"
+	{
+		"ko"	"워밍업 실행"
+	}
+
+	"Force knife round"
+	{
+		"ko"	"라운드 컬 실행"
+	}
+
+	"Pause at freezetime"
+	{
+		"ko"	"일시 중지"
+	}
+
+	"Unpause"
+	{
+		"ko"	"일시 중지 해제"
+	}
+
+	"Get new СT captain"
+	{
+		"ko"	"대테러부대를위한 새로운 선장을 선택하다"
+	}
+
+	"Get new T captain"
+	{
+		"ko"	"테러리스트를위한 새로운 선장을 선택하다"
+	}
+
+	"Move Player to Spec"
+	{
+		"ko"	"플레이어를 관찰자로 이동다"
+	}
+
+	"Set player's team"
+	{
+		"ko"	"선수의 팀 설정다"
+	}
+
+	"Swap player's team"
+	{
+		"ko"	"선수의 팀 바꾸다"
+	}
+
+	"Swap teams"
+	{
+		"ko"	"팀 바꾸다"
+	}
+
+	"Exchange players"
+	{
+		"ko"	"선수 교체"
+	}
+
+	"Reset team pauses"
+	{		"ko"	"팀 일시 중지 재설정"
+	}
+
+	"Kick bots"
+	{
+		"ko"	"킥봇"
+	}
+
+	"Show cvars"
+	{
+		"ko"	"콘솔 변수 표시"
+	}
+
+
+
+
+	"CTs Captain"
+	{
+		"#format" 	"{1:s}"
+		"ko"	"{1} 대테러부대의 선장: "
+	}
+
+	"Ts Captain"
+	{
+		"#format" 	"{1:s}"
+		"ko"	"{1} 테러리스트의 선장: "
+	}
+
+	"has been selected as CTs captain"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} {2} 대테러부대의 선장으로 선택되었습니다"
+	}
+
+	"has been selected as Ts captain"
+	{
+		"#format" 	"{1:s},{2:s}"
+		"ko"	"{1} {2} 테러리스트의 선장으로 선택되었습니다"
+	}
+
+	"You were not set the answer Please choose captain again"
+	{
+		"#format" "{1:s}"
+		"ko" "{1} 답변을 설정하지 않았습니다. 다시 선장을 선택하십시오."
+	}
+
+	"Check your console for cvars"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 콘솔에서 명령위해 확인하십시오."
+	}
+
+	"You are not allowed to swap player"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 플레이어를 교환 권한이 없습니다."
+	}
+
+	"Kicking all bots"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 모든 봇 제외..."		
+	}
+
+	"Team pauses count has been reset"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 일시 정지 횟수가 재설정되었습니다!"	
+	}
+
+	"Match will be paused at freezetime"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 경기는 라운드가 시작될 때 일시 중지됩니다."	
+	}
+
+	"You may only pause during a match"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 경기 중에 만 게임을 일시 중지 할 수 있습니다."	
+	}
+
+	"Match has been unpaused"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 기술적 인 일시 중지에서 경기가 제거되었습니다."	
+	}
+
+	"Players Ready Type ready to ready up"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"ko"	"{1} 플레이어의 준비 상태 - [{2} / {3}]. 채팅에 !ready라고 적어 준비 상태를 알리세요!"
+	}
+
+	"is now ready"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} {2}는 준비되었습니다."
+	}
+
+	"are ready Type ready to ready up"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"ko"	"{1} [{2}/{3}] 준비되었습니다. 채팅에 !ready라고 적어 준비 상태를 알리세요!"
+	}
+
+	"All players are ready Match will begin shortly"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 모든 플레이어가 준비되었습니다! 경기가 곧 시작됩니다."
+	}
+
+	"is now unready"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} {2}는 준비되지 않았습니다."
+	}
+
+	"decided to stay"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} {2} 그의 편을 떠나기로 결정했다!"
+	}
+
+	"decided to switch"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} {2} 그의 편을 변화기로 결정했다!"
+	}
+
+	"You cannot use this command"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 이 명령을 사용할 수 없습니다."
+	}
+
+	"A technical timeout at freezetime called by"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} {2}이 다음 라운드 시작시 기술적 휴식을 취했습니다."
+	}
+
+	"Terrorists win the knife round!"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 테러리스트가 칼 라운드에서 승리!"
+	}
+
+	"Counter-Terrorists wins the knife round!"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 대테러부대가 칼 라운드에서 승리!"
+	}
+
+	"Captain needs stay or switch"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"	"{1} 선장 {2}은 !stay 또는 !switch를 선택해야합니다."	
+	}
+
+	"Counter-Terrorists - Terrorists"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"ko"	"{1} 대테러부대 [{2} - {3}] 테러리스트"
+	}
+
+	"Version by"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"ko"	"{1} {3}에서 플러그인 버전 {2}"
+	}
+
+	"Team pauses used"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"ko"	"{1} 팀 일시 사용되었다: {2}/{3}"
+	}
+
+	"You cannot take a pause team pause limit is reached"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 일시 중지 할 수 없습니다. 팀 일시 중지 제한에 도달했습니다."
+	}
+
+	"You are not allowed to pause"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 일시 중지를 사용할 권한이 없습니다."
+	}
+
+	"Untech called by Waiting to untech"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"ko"	"{1} {2}은 기술 일시 중지를 취소하도록 요청했습니다. {3}에서 기다리는 !untech"
+	}
+
+	"KNIFE"
+	{
+		"ko"	"{1} 라운드 칼"
+	}
+
+	"LIVE!"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 경기가 시작되었습니다"
+	}
+
+	"Please be aware that this match has overtime enabled There is no tie"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 이 경기에는 연장전이 포함되어 있습니다. 여기에는 무승부가 없습니다."
+	}
+
+	"Knife for sides winning team gets to choose sides"
+	{
+		"#format"	"{1:s}"
+		"ko"	"{1} 측면을 선택하기 위해 라운드 칼. 승리 한 팀이 편을 선택합니다."		
+	}
+}
