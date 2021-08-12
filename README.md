@@ -48,6 +48,6 @@ I have decided to post(I am crazy I know) my plugin that I spent about a year of
 
 _That's it!_
 
- ================ ENJOY ================
- ====== ❤️ With Love From Russia ❤️ ======
- ========== © Kaliento Limited =========
+## ================ ENJOY ================
+## ====== ❤️ With Love From Russia ❤️ ======
+## ========== © Kaliento Limited =========
