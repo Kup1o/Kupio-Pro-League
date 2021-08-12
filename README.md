@@ -40,11 +40,11 @@ I have decided to post(I am crazy I know) my plugin that I spent about a year of
     Now we are going to install Kupio Pro League plugin
 
 3. Copy plugin repository to your server directory
-    -_For Example:_
-        -```sh
-        cd /home/server/csgo-dedicated-server/
-        git clone https://github.com/Kup1o/Kupio-Pro-League/csgo/
-        ```
+-_For Example:_
+-```sh
+cd /home/server/csgo-dedicated-server/
+git clone https://github.com/Kup1o/Kupio-Pro-League/csgo/
+```
 
 _That's it!_
 
