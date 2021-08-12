@@ -1,0 +1,42 @@
+============================================================================
+			Kupio Pro League Sourcemod Plugin
+			     Copyright Kaliento Ltd
+			      https://kaliento.ru
+===============================================================================
+   + Added feature or noticeable improvement
+   - Bug fix or something removed
+   * Changed or Information
+   ! Important - Take note!
+===============================================================================
+
+=== Plugin Release 3.0.1 - 4 Jun 2021
+! In-game tag system does not work properly
+! Steam Auth while Connecting does not work properly
+! Switching Game Mode Menu does not initialized in admin menu
+! Player has no refreshing cash on warmup
+! Plugin does not setting up won team in knife round comparing health points
++ Added custom status
++ Added custom error notifications in chat with red fill
++ Added full list plugin's  authors
++ Added match config
++ Added info about variable in console output
++ Added 1v1 config
++ Added 2v2 config
++ Added test for valid administrator on the server
++ Added !version chat command
++ Added Korean localisation
++ Added Russian localisation
+- Fixed known bug when captains were not swapped while teams are
+- Fixed console output bugs
+- Fixed swapping player in admin menu
+- Fixed localisation bugs
+- Fixed won team in knife round bug
+* Menu optimisation
+* Reconfigure color system
+
+=== Plugin Releases before committing - 20 Jun 2020 ~ 4 Jun 2021
++ Added Max Team Size controller (see csgo/cfg/server.cfg)
++ Added No Lobby Reservation plugin (you do not need token more)
++ Added Round Restore plugin (you can choose any backup through admin panel)
++ Update Plugin Core
+- Fixed every known bug
