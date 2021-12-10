@@ -4,7 +4,7 @@
 #define DEBUG
 
 #define PLUGIN_AUTHOR "Kupio & X@IDER & ofir753 & Niveh & Antithasys & Leonardo & splewis"
-#define PLUGIN_VERSION "3.0.1"
+#define PLUGIN_VERSION "3.1"
 #define NONE 0
 #define SPEC 1
 #define TEAM1 2
@@ -372,6 +372,8 @@ public Action Join_Team(client, const char[] command, args)
 			}
 		}
 	}
+
+	SetClientTags();
 	return Plugin_Continue;
 }
 
@@ -1377,7 +1379,7 @@ public Action ForceUnPauseKPL(client, args)
 }
 
 // █ Warmup
-/*
+
 public void SetClientTags()
 {
 	if (CurrentRound == WARMUP)
@@ -1407,7 +1409,7 @@ public void SetClientTags()
 			}
 			else if (!CaptainCheck(i))
 			{
-				CS_SetClientClanTag(i, "[PLAYER]");
+				CS_SetClientClanTag(i, " ");
 			}
 		}
 	}
@@ -1418,7 +1420,7 @@ public void SetClientTags()
 			CS_SetClientClanTag(i, " ");
 		}
 	}
-}*/
+}
 
 public bool AllReadyCheck()
 {
@@ -2153,6 +2155,7 @@ public Action Ladder5on5KPL(client, cfg)
 	CurrentRound = MATCH;
 	ResetTeamPausesFunction();
 	CreateTimer(4.0, MatchMessage);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
@@ -2162,6 +2165,7 @@ public Action Ladder2on2KPL(client, cfg)
 	CurrentRound = MATCH;
 	ResetTeamPausesFunction();
 	CreateTimer(4.0, MatchMessage);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
@@ -2185,6 +2189,7 @@ public Action LoadConfigWarmup(client, cfg)
 	CaptainMenu = false;
 	ClearArray(PlayersReadyList);
 	CreateTimer(2.0, WarmupLoadedKPL);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
@@ -2197,6 +2202,7 @@ public Action KnifeRoundRandom(client, cfg)
 	ServerCommand("kpladmin_getcaptain_t");
 	ServerCommand("kpladmin_getcaptain_ct");
 	CreateTimer(2.0, KnifeRoundMessage);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
@@ -2213,6 +2219,7 @@ public Action LoadConfigKnifeRound(client, cfg)
 			ServerCommand("kpladmin_getcaptain_ct");
 			CreateTimer(2.0, KnifeRoundMessage);
 			CurrentRound = KNIFE_ROUND;
+			SetClientTags();
 			return Plugin_Handled;
 		}
 		else if (ManualCaptainCheck())
@@ -2229,6 +2236,7 @@ public Action LoadConfigKnifeRound(client, cfg)
 				ResetValues();
 				CreateTimer(2.0, KnifeRoundMessage);
 				CurrentRound = KNIFE_ROUND;
+				SetClientTags();
 				return Plugin_Handled;
 			}
 			return Plugin_Handled;
