@@ -7,11 +7,11 @@
 
 ![Example](https://raw.githubusercontent.com/Kup1o/Kupio-Pro-League/master/images/example.gif)
 
-**Status: Supported, actively developed.** !
+**Status: Supported, actively developed.**
 
-Kupio Pro League is a standalone SourceMod plugins bundle for running practice matches on Counter-Strike:Global Offensive servers. It is originally based on [Simple Match Plugin](https://forums.alliedmods.net/showthread.php?s=fdf09df7b7dcec7d312688cbd7a5c24e) on the 20th of June at 2020.
+Kupio Pro League is a standalone SourceMod plugins bundle for running practice matches on Counter-Strike: Global Offensive servers. It is originally based on [Simple Match Plugin](https://forums.alliedmods.net/showthread.php?s=fdf09df7b7dcec7d312688cbd7a5c24e) on the 20th of June at 2020.
 
-Kupio Pro League plugin was created just for __fun__. The main use is tournaments and practice matches
+Kupio Pro League plugin was created just for __fun__. The main use is a match management at tournaments and practice matches.
 
 Features include
 - Friendly admin panel
@@ -38,7 +38,7 @@ If you need more help, see the step-by-step guide in the wiki.
 
 ## Plugin Support
 ### Developing
-Kupio Pro League is officially supporting its developer. Anyway, there is only one person. If you need fork it, feel free to play. If you want to work on main plugin, please commit your version and pull the request. If you want to work with Kupio Pro League developer, contact him on [Kaliento](https://kaliento.ru).
+Kupio Pro League is officially supporting by its developer. Anyway, there is only one person. If you need fork it, feel free to play. If you want to work on main plugin, please commit your version and pull the request. If you want to work with Kupio Pro League developer, contact him on [Kaliento](https://kaliento.ru).
 
 ### Reporting Bugs
 Please make a [github issue](https://github.com/Kup1o/Kupio-Pro-League/issues) and fill out as much information as possible. Reproducible steps and a clear version number will help tremendously!
