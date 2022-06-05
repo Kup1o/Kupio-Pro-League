@@ -9,6 +9,9 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Plugin Testing 3.1 - 11 Dec 2021
++ Added Client Tag System [READY], [CAPTAIN], etc..
+
 === Plugin Release 3.0.1 - 4 Jun 2021
 ! In-game tag system does not work properly
 ! Steam Auth while Connecting does not work properly

@@ -1,10 +1,9 @@
-#pragma semicolon 1
+#pragma semicolon 1 // 2327
 #pragma tabsize 0
 
 #define DEBUG
-
-#define PLUGIN_AUTHOR "Kupio & X@IDER & ofir753 & Niveh & Antithasys & Leonardo & splewis"
-#define PLUGIN_VERSION "3.0.1"
+#define PLUGIN_AUTHOR "kup1o"
+#define PLUGIN_VERSION "3.1"
 #define NONE 0
 #define SPEC 1
 #define TEAM1 2
@@ -28,8 +27,7 @@
 
 EngineVersion g_Game;
 
-public Plugin myinfo = 
-{
+public Plugin myinfo = {
 	name = "[Kupio Pro League] Core", 
 	author = PLUGIN_AUTHOR, 
 	description = "Match Manager", 
@@ -92,79 +90,66 @@ int MaxPausesT;
 int game = GAME_UNKNOWN;
 
 
-char teams[4][16] = 
-{
+char teams[4][16] = {
 	"N/A", 
 	"SPEC", 
 	"T", 
 	"CT"
 };
 
-char t_models[4][PLATFORM_MAX_PATH] = 
-{
+char t_models[4][PLATFORM_MAX_PATH] = {
 	"models/player/t_phoenix.mdl", 
 	"models/player/t_leet.mdl", 
 	"models/player/t_arctic.mdl", 
 	"models/player/t_guerilla.mdl"
 };
 
-char ct_models[4][PLATFORM_MAX_PATH] = 
-{
+char ct_models[4][PLATFORM_MAX_PATH] = {
 	"models/player/ct_urban.mdl", 
 	"models/player/ct_gsg9.mdl", 
 	"models/player/ct_sas.mdl", 
 	"models/player/ct_gign.mdl"
 };
 
-DropWeapon(client, ent)
-{
+DropWeapon(client, ent){
 	if (hDrop != INVALID_HANDLE)
 		SDKCall(hDrop, client, ent, 0, 0);
-	else
-	{
+	else{
 		char edict[MAX_NAME];
 		GetEdictClassname(ent, edict, sizeof(edict));
 		FakeClientCommandEx(client, "use %s;drop", edict);
 	}
 }
 
-ExchangePlayers(client, cl1, cl2)
-{
+ExchangePlayers(client, cl1, cl2){
 	int t1 = GetClientTeam(cl1);
 	int t2 = GetClientTeam(cl2);
-	if (((t1 == TEAM1) && (t2 == TEAM2)) || ((t1 == TEAM2) && (t2 == TEAM1)))
-	{
+	if (((t1 == TEAM1) && (t2 == TEAM2)) || ((t1 == TEAM2) && (t2 == TEAM1))){
 		ChangeClientTeamEx(cl1, t2);
 		ChangeClientTeamEx(cl2, t1);
 	} else
 		ReplyToCommand(client, "%s You chose incorrect targets. Please rechoose players again.", ChatPrefix2);
 }
 
-stock bool IsPaused()
-{
+stock bool IsPaused(){
 	return GameRules_GetProp("m_bMatchWaitingForResume") != 0;
 }
 
-stock bool PausesLimitReachedCT()
-{
-	if ((SetMaxPausesPerTeamKPL.IntValue == TotalPausesCT))
-	{
+stock bool PausesLimitReachedCT(){
+	if ((SetMaxPausesPerTeamKPL.IntValue == TotalPausesCT)){
 		return true;
 	}
 	return false;
 }
 
-stock bool PausesLimitReachedT()
-{
-	if ((SetMaxPausesPerTeamKPL.IntValue == TotalPausesT))
-	{
+stock bool PausesLimitReachedT(){
+	if ((SetMaxPausesPerTeamKPL.IntValue == TotalPausesT)){
 		return true;
 	}
 	return false;
 }
 
-public OnMapStart()
-{
+public OnMapStart(){
 	GetTeamName(TEAM1, teams[TEAM1], MAX_ID);
 	GetTeamName(TEAM2, teams[TEAM2], MAX_ID);
 	TacticUnpauseCT = false;
@@ -181,16 +166,14 @@ public OnMapStart()
 	MaxPausesT = MaxPausesPerTeam;
 	CaptainMenu = false;
 	ManualCaptain = true;
-	ServerCommand("kpladmin_warmup");
+	LoadConfigWarmup();
 	ResetValues();
 	ClearArray(PlayersReadyList);
 	CurrentRound = WARMUP;
 }
 
-public void OnClientDisconnect(client)
-{
-	if (PlayerReadyCheck(client))
-	{
+public void OnClientDisconnect(client){
+	if (PlayerReadyCheck(client)){
 		char DisconnectedPlayer[32];
 		GetClientAuthId(client, AuthId_Steam2, DisconnectedPlayer, sizeof(DisconnectedPlayer), false);
 		int DisPlayerIndex = FindStringInArray(PlayersReadyList, DisconnectedPlayer);
@@ -199,11 +182,9 @@ public void OnClientDisconnect(client)
 	}
 }
 
-public void OnPluginStart()
-{
+public void OnPluginStart(){
 	g_Game = GetEngineVersion();
-	if (g_Game != Engine_CSGO)
-	{
+	if (g_Game != Engine_CSGO){
 		SetFailState("This plugin is for CSGO only.");
 	}
 	
@@ -264,48 +245,38 @@ public void OnPluginStart()
 }
 
 // █ MultiPrefixes
-public Action_OnSettingsChange(Handle cvar, const char[] oldvalue, const char[] newvalue)
-{
-	if (cvar == gh_Prefixes)
-	{
+public Action_OnSettingsChange(Handle cvar, const char[] oldvalue, const char[] newvalue){
+	if (cvar == gh_Prefixes){
 		strcopy(gs_Prefixes, sizeof(gs_Prefixes), newvalue);
 	}
-	else if (cvar == gh_SilentPrefixes)
-	{
+	else if (cvar == gh_SilentPrefixes){
 		strcopy(gs_SilentPrefixes, sizeof(gs_SilentPrefixes), newvalue);
 	}
 }
 
-public Action Command_Say(client, const char[] command, argc)
-{
+public Action Command_Say(client, const char[] command, argc){
 	char sText[300];
 	char sSplit[2];
 	GetCmdArgString(sText, sizeof(sText));
 	StripQuotes(sText);
-	for (new i = 0; i < strlen(gs_Prefixes); i++)
-	{
-		if (sText[0] == gs_Prefixes[i])
-		{
+	for (new i = 0; i < strlen(gs_Prefixes); i++){
+		if (sText[0] == gs_Prefixes[i]){
 			if (sText[1] == '\0' || sText[1] == ' ')
 				return Plugin_Continue;
 			Format(sSplit, sizeof(sSplit), "%c", gs_Prefixes[i]);
-			if (!SplitStringRight(sText, sSplit, sText, sizeof(sText)))
-			{
+			if (!SplitStringRight(sText, sSplit, sText, sizeof(sText))){
 				return Plugin_Continue;
 			}
 			FakeClientCommand(client, "sm_%s", sText);
 			return Plugin_Continue;
 		}
 	}
-	for (new i = 0; i < strlen(gs_SilentPrefixes); i++)
-	{
-		if (sText[0] == gs_SilentPrefixes[i])
-		{
+	for (new i = 0; i < strlen(gs_SilentPrefixes); i++){
+		if (sText[0] == gs_SilentPrefixes[i]){
 			if (sText[1] == '\0' || sText[1] == ' ')
 				return Plugin_Continue;
 			Format(sSplit, sizeof(sSplit), "%c", gs_SilentPrefixes[i]);
-			if (!SplitStringRight(sText, sSplit, sText, sizeof(sText)))
-			{
+			if (!SplitStringRight(sText, sSplit, sText, sizeof(sText))){
 				return Plugin_Continue;
 			}
 			FakeClientCommand(client, "sm_%s", sText);
@@ -315,8 +286,7 @@ public Action Command_Say(client, const char[] command, argc)
 	return Plugin_Continue;
 }
 
-stock bool SplitStringRight(const char[] source, const char[] split, char[] part, partLen)
-{
+stock bool SplitStringRight(const char[] source, const char[] split, char[] part, partLen){
 	int index = StrContains(source, split); // get start index of split string
 	
 	if (index == -1) // split string not found..
@@ -327,58 +297,48 @@ stock bool SplitStringRight(const char[] source, const char[] split, char[] part
 	return true;
 }
 
-/*void AddTranslatedMenuItem(Menu menu, const char[] info, const char[] display)
-{
+/*void AddTranslatedMenuItem(Menu menu, const char[] info, const char[] display){
 	char buffer[128];
 	Format(buffer, sizeof(buffer), display);
 	AddMenuItem(menu, info, buffer);
 }*/
 
 // █ Kupio Pro League Administrator
-public Action OpenAdminMenuKPL(client, args)
-{
+public Action OpenAdminMenuKPL(client, args){
 	AdminMenuKPL(client);
 }
 
-public Action Join_Team(client, const char[] command, args)
-{
+public Action Join_Team(client, const char[] command, args){
 	char team[5];
 	GetCmdArg(1, team, sizeof(team));
 	int target = StringToInt(team);
 	int current = GetClientTeam(client);
 	
-	if (CurrentRound == WARMUP)
-	{
-		if (target == TEAM1 || target == TEAM2)
-		{
+	if (CurrentRound == WARMUP){
+		if (target == TEAM1 || target == TEAM2){
 			PrintToChat(client, "%t", "Players Ready Type ready to ready up", ChatPrefix0, ReadyPlayers, GetConVarInt(RequiredReadyPlayers));
 		}
 	}
 	
-	if (current == TEAM1 || current == TEAM2 || current == SPEC)
-	{
-		if (CurrentRound == WARMUP)
-		{
-			if (target == SPEC || target == NONE)
-			{
+	if (current == TEAM1 || current == TEAM2 || current == SPEC){
+		if (CurrentRound == WARMUP){
+			if (target == SPEC || target == NONE){
 				return Plugin_Handled;
 			}
 		}
-		else if (CurrentRound == KNIFE_ROUND || CurrentRound == MATCH)
-		{
-			if (target == TEAM1 || target == TEAM2 || target == SPEC || target == NONE)
-			{
+		else if (CurrentRound == KNIFE_ROUND || CurrentRound == MATCH){
+			if (target == TEAM1 || target == TEAM2 || target == SPEC || target == NONE){
 				return Plugin_Handled;
 			}
 		}
 	}
+
+	SetClientTags();
 	return Plugin_Continue;
 }
 
-public Action Command_Team(client, args)
-{
-	if (args < 2)
-	{
+public Action Command_Team(client, args){
+	if (args < 2)	{
 		ReplyToCommand(client, "%s kpladmin_team <target> <team>", ChatPrefix2);
 		return Plugin_Handled;
 	}
@@ -393,19 +353,16 @@ public Action Command_Team(client, args)
 	
 	int count = ProcessTargetString(pattern, client, targets, sizeof(targets), 0, buffer, sizeof(buffer), ml);
 	
-	for (new i = 0; i < count; i++)
-	{
+	for (new i = 0; i < count; i++){
 		ChangeClientTeamEx(targets[i], tm);
 	}
 	return Plugin_Handled;
 }
 
-public SetTeamMenu(client)
-{
+public SetTeamMenu(client){
 	Handle menu = CreateMenu(Handler_SetTeamMenu);
 	SetMenuTitle(menu, "Set Team Menu", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -420,12 +377,9 @@ public SetTeamMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Set Team Menu", param1);
 			
@@ -433,8 +387,7 @@ public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2)
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -443,15 +396,13 @@ public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2)
 			SetTeamMenu_TeamSelect(param1);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public SetTeamMenu_TeamSelect(client)
-{
+public SetTeamMenu_TeamSelect(client){
 	Menu menu = new Menu(Handler_SetTeamMenu_TeamSelect);
 	SetMenuTitle(menu, "Set Team Select Menu", client);
 	AddMenuItem(menu, "CT", "CT", client);
@@ -461,12 +412,9 @@ public SetTeamMenu_TeamSelect(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_SetTeamMenu_TeamSelect(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_SetTeamMenu_TeamSelect(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Set Team Select Menu", param1);
 			
@@ -474,39 +422,32 @@ public Handler_SetTeamMenu_TeamSelect(Handle menu, MenuAction action, param1, pa
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
-			if (StrEqual(info, "CT"))
-			{
+			if (StrEqual(info, "CT")){
 				ServerCommand("kpladmin_team %s 3", selected_player_global);
 				AdminMenuKPL(param1);
 			}
-			else if (StrEqual(info, "T"))
-			{
+			else if (StrEqual(info, "T")){
 				ServerCommand("kpladmin_team %s 2", selected_player_global);
 				AdminMenuKPL(param1);
 			}
-			else if (StrEqual(info, "SPEC"))
-			{
+			else if (StrEqual(info, "SPEC")){
 				ServerCommand("kpladmin_team %s 1", selected_player_global);
 				AdminMenuKPL(param1);
 			}
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public Action Command_Spec(client, args)
-{
-	if (args < 1)
-	{
+public Action Command_Spec(client, args){
+	if (args < 1){
 		ReplyToCommand(client, "%s Please enter a target.", ChatPrefix2);
 		return Plugin_Handled;
 	}
@@ -518,8 +459,7 @@ public Action Command_Spec(client, args)
 	
 	int count = ProcessTargetString(pattern, client, targets, sizeof(targets), 0, buffer, sizeof(buffer), ml);
 	
-	for (new i = 0; i < count; i++)
-	{
+	for (new i = 0; i < count; i++){
 		int t = targets[i];
 		if (IsPlayerAlive(t))ForcePlayerSuicide(t);
 		ChangeClientTeam(t, SPEC);
@@ -527,12 +467,10 @@ public Action Command_Spec(client, args)
 	return Plugin_Handled;
 }
 
-public SpecMenu(client)
-{
+public SpecMenu(client){
 	Menu menu = new Menu(Handler_SpecMenu);
 	SetMenuTitle(menu, "Spec Menu", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -547,22 +485,17 @@ public SpecMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Spec Menu", param1);
 			
 			Handle panel = view_as<Handle>(param2);
 			SetPanelTitle(panel, buffer);
-			
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -573,15 +506,13 @@ public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2)
 			AdminMenuKPL(param1);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public CaptainMenuForAdmin(client)
-{
+public CaptainMenuForAdmin(client){
 	Menu menu = new Menu(Handler_ChooseCaptain_Question);
 	SetMenuTitle(menu, "Manual Captain Question", client);
 	AddMenuItem(menu, "Y", "yes", client);
@@ -590,12 +521,10 @@ public CaptainMenuForAdmin(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public CT_ChooseCaptainForAdmin(client)
-{
+public CT_ChooseCaptainForAdmin(client){
 	Menu menu = new Menu(Handler_ChooseCaptain_CT);
 	SetMenuTitle(menu, "Manual Captain Selection CT", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -613,12 +542,10 @@ public CT_ChooseCaptainForAdmin(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public T_ChooseCaptainForAdmin(client)
-{
+public T_ChooseCaptainForAdmin(client){
 	Menu menu = new Menu(Handler_ChooseCaptain_T);
 	SetMenuTitle(menu, "Manual Captain Selection T", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -636,12 +563,9 @@ public T_ChooseCaptainForAdmin(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_ChooseCaptain_Question(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ChooseCaptain_Question(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Manual Captain Question", param1);
 			
@@ -649,44 +573,36 @@ public Handler_ChooseCaptain_Question(Handle menu, MenuAction action, param1, pa
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			int args;
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
-			if (StrEqual(info, "Y"))
-			{
+			if (StrEqual(info, "Y")){
 				ManualCaptain = true;
 				CaptainMenu = true;
 				CT_ChooseCaptainForAdmin(param1);
 			}
 			
-			else if (StrEqual(info, "N"))
-			{
+			else if (StrEqual(info, "N")){
 				ManualCaptain = false;
 				CaptainMenu = true;
 				LoadConfigKnifeRound(param1, args);
 			}
-			else
-			{
+			else {
 				PrintToChat(param1, "You were not set the answer Please choose captain again", ChatPrefix1);
 			}
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public Handler_ChooseCaptain_CT(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ChooseCaptain_CT(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Manual Captain Selection CT", param1);
 			
@@ -694,8 +610,7 @@ public Handler_ChooseCaptain_CT(Handle menu, MenuAction action, param1, param2)
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -710,19 +625,15 @@ public Handler_ChooseCaptain_CT(Handle menu, MenuAction action, param1, param2)
 			T_ChooseCaptainForAdmin(param1);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public Handler_ChooseCaptain_T(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ChooseCaptain_T(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Manual Captain Selection T", param1);
 			
@@ -730,8 +641,7 @@ public Handler_ChooseCaptain_T(Handle menu, MenuAction action, param1, param2)
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			int args;
 			GetMenuItem(menu, param2, info, sizeof(info));
@@ -748,19 +658,16 @@ public Handler_ChooseCaptain_T(Handle menu, MenuAction action, param1, param2)
 			LoadConfigKnifeRound(param1, args);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public CT_ChooseCaptainForAdminMenu(client)
-{
+public CT_ChooseCaptainForAdminMenu(client){
 	Menu menu = new Menu(Handler_ChooseCaptain_CT_From_AdminMenu);
 	SetMenuTitle(menu, "Manual Captain Selection CT", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -778,12 +685,10 @@ public CT_ChooseCaptainForAdminMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public T_ChooseCaptainForAdminMenu(client)
-{
+public T_ChooseCaptainForAdminMenu(client){
 	Menu menu = new Menu(Handler_ChooseCaptain_T_From_AdminMenu);
 	SetMenuTitle(menu, "Manual Captain Selection T", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++)	{
 		if (!IsClientValid(i))
 			continue;
 		
@@ -801,21 +706,17 @@ public T_ChooseCaptainForAdminMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_ChooseCaptain_CT_From_AdminMenu(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ChooseCaptain_CT_From_AdminMenu(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Manual Captain Selection CT", param1);
 			
 			Handle panel = view_as<Handle>(param2);
 			SetPanelTitle(panel, buffer);
 		}
-		
-		case MenuAction_Select:
-		{
+
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -829,19 +730,15 @@ public Handler_ChooseCaptain_CT_From_AdminMenu(Handle menu, MenuAction action, p
 			PrintToChatAll("%t", "has been selected as CTs captain", ChatPrefix0, selection_Name);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public Handler_ChooseCaptain_T_From_AdminMenu(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ChooseCaptain_T_From_AdminMenu(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Manual Captain Selection T", param1);
 			
@@ -849,8 +746,7 @@ public Handler_ChooseCaptain_T_From_AdminMenu(Handle menu, MenuAction action, pa
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			CaptainsSelected = true;
@@ -865,15 +761,13 @@ public Handler_ChooseCaptain_T_From_AdminMenu(Handle menu, MenuAction action, pa
 			PrintToChatAll("%t", "has been selected as Ts captain", ChatPrefix0, selection_Name);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public AdminMenuKPL(client)
-{
+public AdminMenuKPL(client){
 	Handle menu = CreateMenu(AdminHandlerKPL, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "KPL Admin Menu", client);
 	AddMenuItem(menu, "Start Warmup", "Start Warmup", client);
@@ -894,17 +788,13 @@ public AdminMenuKPL(client)
 	DisplayMenu(menu, client, 60);
 }
 
-public AdminHandlerKPL(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Start:
-		{
+public AdminHandlerKPL(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Start:{
 			PrintToServer("Displaying menu");
 		}
 		
-		case MenuAction_Display:
-		{
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "KPL Admin Menu", param1);
 			
@@ -912,87 +802,72 @@ public AdminHandlerKPL(Handle menu, MenuAction action, param1, param2)
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			int args;
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
-			if (StrEqual(info, "Start Warmup"))
-			{
+			if (StrEqual(info, "Start Warmup")){
 				LoadConfigWarmup(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Force knife round"))
-			{
+			else if (StrEqual(info, "Force knife round")){
 				LoadConfigKnifeRound(param1, args);
 			}
 			
-			else if (StrEqual(info, "Pause at freezetime"))
-			{
+			else if (StrEqual(info, "Pause at freezetime")){
 				ForcePauseKPL(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Unpause"))
-			{
+			else if (StrEqual(info, "Unpause")){
 				ForceUnPauseKPL(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Get new СT captain"))
-			{
+			else if (StrEqual(info, "Get new СT captain")){
 				CT_ChooseCaptainForAdmin(param1);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Get new T captain"))
-			{
+			else if (StrEqual(info, "Get new T captain")){
 				T_ChooseCaptainForAdmin(param1);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Move Player to Spec"))
-			{
+			else if (StrEqual(info, "Move Player to Spec")){
 				SpecMenu(param1);
 			}
 			
-			else if (StrEqual(info, "Set player's team"))
-			{
+			else if (StrEqual(info, "Set player's team")){
 				SetTeamMenu(param1);
 			}
 			
-			else if (StrEqual(info, "Swap player's team"))
-			{
+			else if (StrEqual(info, "Swap player's team")){
 				SwapMenu(param1);
 			}
 			
-			else if (StrEqual(info, "Swap teams"))
-			{
+			else if (StrEqual(info, "Swap teams")){
 				Command_TeamSwap(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Exchange players"))
-			{
+			else if (StrEqual(info, "Exchange players")){
 				ExchangePlayersMenu(param1);
 			}
 			
-			else if (StrEqual(info, "Reset team pauses"))
-			{
+			else if (StrEqual(info, "Reset team pauses")){
 				ResetTeamPausesKPL(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Kick bots"))
-			{
+			else if (StrEqual(info, "Kick bots")){
 				KickBotsKPL(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
-			else if (StrEqual(info, "Show cvars"))
-			{
+			else if (StrEqual(info, "Show cvars")){
 				PrintToConsole(param1, "%s sm_cvar kpl_set_pause_limit NUMBER -> set amount of pauses allowed PER TEAM", ChatPrefix2);
 				PrintToConsole(param1, "%s sm_cvar kpl_ready_players_needed NUMBER -> required ready players for kniferound", ChatPrefix2);
 				PrintToChat(param1, "%t", "Check your console for cvars", ChatPrefix2);
@@ -1000,18 +875,15 @@ public AdminHandlerKPL(Handle menu, MenuAction action, param1, param2)
 			}
 		}
 		
-		case MenuAction_Cancel:
-		{
+		case MenuAction_Cancel:{
 			PrintToServer("Client %d's menu was cancelled for reason %d", param1, param2);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 		
-		case MenuAction_DrawItem:
-		{
+		case MenuAction_DrawItem:{
 			int style;
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
@@ -1021,17 +893,13 @@ public AdminHandlerKPL(Handle menu, MenuAction action, param1, param2)
 	return 0;
 }
 
-public int RandomCaptainCT()
-{
+public int RandomCaptainCT(){
 	int PlayersCT[MAXPLAYERS + 1];
 	int PlayersCountCT;
 	
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientValid(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_CT)
-			{
+	for (int i = 1; i <= MaxClients; i++){
+		if (IsClientValid(i)){
+			if (GetClientTeam(i) == CS_TEAM_CT){
 				PlayersCT[PlayersCountCT++] = i;
 			}
 		}
@@ -1039,17 +907,13 @@ public int RandomCaptainCT()
 	return PlayersCT[GetRandomInt(0, PlayersCountCT - 1)];
 }
 
-public int RandomCaptainT()
-{
+public int RandomCaptainT(){
 	int PlayersT[MAXPLAYERS + 1];
 	int PlayersCountT;
 	
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientValid(i))
-		{
-			if (GetClientTeam(i) == CS_TEAM_T)
-			{
+	for (int i = 1; i <= MaxClients; i++)	{
+		if (IsClientValid(i)){
+			if (GetClientTeam(i) == CS_TEAM_T){
 				PlayersT[PlayersCountT++] = i;
 			}
 		}
@@ -1057,16 +921,14 @@ public int RandomCaptainT()
 	return PlayersT[GetRandomInt(0, PlayersCountT - 1)];
 }
 
-public Action GetCaptainCT(client, args)
-{
+public Action GetCaptainCT(client, args){
 	CaptainCT = RandomCaptainCT();
 	GetClientName(CaptainCT, CaptainName_CT, 32);
 	GetClientAuthId(CaptainCT, AuthId_Steam2, CaptainID_CT, 32, false);
 	PrintToChatAll("%t", "CTs Captain", ChatPrefix0, CaptainName_CT);
 }
 
-public Action GetCaptainT(client, args)
-{
+public Action GetCaptainT(client, args){
 	CaptainT = RandomCaptainT();
 	GetClientName(CaptainT, CaptainName_T, 32);
 	GetClientAuthId(CaptainT, AuthId_Steam2, CaptainID_T, 32, false);
@@ -1074,10 +936,8 @@ public Action GetCaptainT(client, args)
 	PrintToChatAll("%t", "Ts Captain", ChatPrefix0, CaptainName_T);
 }
 
-ChangeClientTeamEx(client, team)
-{
-	if ((game != GAME_CSTRIKE) || (team < TEAM1))
-	{
+ChangeClientTeamEx(client, team){
+	if ((game != GAME_CSTRIKE) || (team < TEAM1))	{
 		ChangeClientTeam(client, team);
 		return;
 	}
@@ -1091,8 +951,7 @@ ChangeClientTeamEx(client, team)
 	GetClientModel(client, model, sizeof(model));
 	newmodel = model;
 	
-	if (oldTeam == TEAM1)
-	{
+	if (oldTeam == TEAM1){
 		int c4 = GetPlayerWeaponSlot(client, CS_SLOT_C4);
 		if (c4 != -1)DropWeapon(client, c4);
 		
@@ -1101,8 +960,7 @@ ChangeClientTeamEx(client, team)
 		if (StrContains(model, t_models[2], false))newmodel = ct_models[2];
 		if (StrContains(model, t_models[3], false))newmodel = ct_models[3];
 	} else
-		if (oldTeam == TEAM2)
-	{
+		if (oldTeam == TEAM2){
 		SetEntProp(client, Prop_Send, "m_bHasDefuser", 0, 1);
 		
 		if (StrContains(model, ct_models[0], false))newmodel = t_models[0];
@@ -1114,28 +972,22 @@ ChangeClientTeamEx(client, team)
 	if (hSetModel != INVALID_HANDLE)SDKCall(hSetModel, client, newmodel);
 }
 
-SwapPlayer(client, target)
-{
-	if (!IsValidKupio(client))
-	{
+SwapPlayer(client, target){
+	if (!IsValidKupio(client)){
 		PrintToChat(client, "%t", "You are not allowed to swap player", ChatPrefix1);
 	}
-	else
-	{
-		switch (GetClientTeam(target))
-		{
+	else{
+		switch (GetClientTeam(target)){
 			case TEAM1 : ChangeClientTeamEx(target, TEAM2);
 			case TEAM2 : ChangeClientTeamEx(target, TEAM1);
 			default:
 			return;
-		}	
+		}
 	}
 }
 
-public Action Command_Swap(client, args)
-{
-	if (!args)
-	{
+public Action Command_Swap(client, args){
+	if (!args){
 		ReplyToCommand(client, "%s kpladmin_swap <target>", ChatPrefix2);
 		return Plugin_Handled;
 	}
@@ -1152,12 +1004,10 @@ public Action Command_Swap(client, args)
 	return Plugin_Handled;
 }
 
-public SwapMenu(client)
-{
+public SwapMenu(client){
 	Handle menu = CreateMenu(Handler_SwapMenu);
 	SetMenuTitle(menu, "Swap Menu", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -1172,12 +1022,9 @@ public SwapMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_SwapMenu(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_SwapMenu(Handle menu, MenuAction action, param1, param2){
+	switch (action)	{
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Swap Menu", param1);
 			
@@ -1185,8 +1032,7 @@ public Handler_SwapMenu(Handle menu, MenuAction action, param1, param2)
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -1197,17 +1043,14 @@ public Handler_SwapMenu(Handle menu, MenuAction action, param1, param2)
 			AdminMenuKPL(param1);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public Action Command_Exchange(client, args)
-{
-	if (args < 2)
-	{
+public Action Command_Exchange(client, args){
+	if (args < 2)	{
 		ReplyToCommand(client, "%s kpladmin_exchange <target1> <target2>", ChatPrefix2);
 		return Plugin_Handled;
 	}
@@ -1228,12 +1071,10 @@ public Action Command_Exchange(client, args)
 	return Plugin_Handled;
 }
 
-public ExchangePlayersMenu(client)
-{
+public ExchangePlayersMenu(client){
 	Handle menu = CreateMenu(Handler_ExchangePlayersMenu);
 	SetMenuTitle(menu, "Exchange Players Menu", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
 			continue;
 		
@@ -1248,12 +1089,9 @@ public ExchangePlayersMenu(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_ExchangePlayersMenu(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ExchangePlayersMenu(Handle menu, MenuAction action, param1, param2){
+	switch (action)	{
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Exchange Players Menu", param1);
 			
@@ -1261,8 +1099,7 @@ public Handler_ExchangePlayersMenu(Handle menu, MenuAction action, param1, param
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -1271,19 +1108,16 @@ public Handler_ExchangePlayersMenu(Handle menu, MenuAction action, param1, param
 			ExchangePlayersMenu_ExchangeWith(param1);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public ExchangePlayersMenu_ExchangeWith(client)
-{
+public ExchangePlayersMenu_ExchangeWith(client){
 	Handle menu = CreateMenu(Handler_ExchangePlayersMenu_ExchangeWith);
 	SetMenuTitle(menu, "Exchange Players With Menu", client);
-	for (int i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++)	{
 		if (!IsClientValid(i))
 			continue;
 		
@@ -1298,12 +1132,9 @@ public ExchangePlayersMenu_ExchangeWith(client)
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 }
 
-public Handler_ExchangePlayersMenu_ExchangeWith(Handle menu, MenuAction action, param1, param2)
-{
-	switch (action)
-	{
-		case MenuAction_Display:
-		{
+public Handler_ExchangePlayersMenu_ExchangeWith(Handle menu, MenuAction action, param1, param2){
+	switch (action){
+		case MenuAction_Display:{
 			char buffer[255];
 			Format(buffer, sizeof(buffer), "Exchange Players With Menu", param1);
 			
@@ -1311,8 +1142,7 @@ public Handler_ExchangePlayersMenu_ExchangeWith(Handle menu, MenuAction action, 
 			SetPanelTitle(panel, buffer);
 		}
 		
-		case MenuAction_Select:
-		{
+		case MenuAction_Select:{
 			char info[32];
 			GetMenuItem(menu, param2, info, sizeof(info));
 			
@@ -1322,39 +1152,32 @@ public Handler_ExchangePlayersMenu_ExchangeWith(Handle menu, MenuAction action, 
 			AdminMenuKPL(param1);
 		}
 		
-		case MenuAction_End:
-		{
+		case MenuAction_End:{
 			CloseHandle(menu);
 		}
 	}
 }
 
-public Action KickBotsKPL(client, args)
-{
+public Action KickBotsKPL(client, args){
 	ServerCommand("bot_kick");
 	PrintToChat(client, "%t", "Kicking all bots", ChatPrefix0);
 	return Plugin_Handled;
 }
 
-public void ResetTeamPausesFunction()
-{
+public void ResetTeamPausesFunction(){
 	TotalPausesCT = 0;
 	TotalPausesT = 0;
 }
 
-public Action ResetTeamPausesKPL(client, args)
-{
+public Action ResetTeamPausesKPL(client, args){
 	ResetTeamPausesFunction();
 	PrintToChat(client, "%t", "Team pauses count has been reset", ChatPrefix0);
 	return Plugin_Handled;
 }
 
-public Action ForcePauseKPL(client, args)
-{
-	if (CurrentRound == MATCH)
-	{
-		if (IsPaused())
-		{
+public Action ForcePauseKPL(client, args){
+	if (CurrentRound == MATCH)	{
+		if (IsPaused()){
 			return Plugin_Handled;
 		}
 		ServerCommand("mp_pause_match");
@@ -1365,122 +1188,93 @@ public Action ForcePauseKPL(client, args)
 	return Plugin_Handled;
 }
 
-public Action ForceUnPauseKPL(client, args)
-{
-	if (!IsPaused())
-	{
+public Action ForceUnPauseKPL(client, args){
+	if (!IsPaused()){
 		return Plugin_Handled;
 	}
 	ServerCommand("mp_unpause_match");
-	PrintToChatAll("%t", "Match has been unpaused.", ChatPrefix0);
+	PrintToChatAll("%t", "Match has been unpaused", ChatPrefix0);
 	return Plugin_Handled;
 }
 
 // █ Warmup
-/*
-public void SetClientTags()
-{
-	if (CurrentRound == WARMUP)
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
+public void SetClientTags(){
+	if (CurrentRound == WARMUP){
+		for (int i = 1; i <= MaxClients; i++){
 			if (!IsClientValid(i))
 				continue;
 
-			if (PlayerReadyCheck(i))
-			{
+			if (PlayerReadyCheck(i)){
 				CS_SetClientClanTag(i, "[READY]");
 			}
-			else if (!PlayerReadyCheck(i))
-			{
+			else if (!PlayerReadyCheck(i)){
 				CS_SetClientClanTag(i, "[UNREADY]");
 			}
 		}
 	}
-	else if (CurrentRound == MATCH)
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			if (CaptainCheck(i))
-			{
+	else if (CurrentRound == MATCH){
+		for (int i = 1; i <= MaxClients; i++){
+			if (CaptainCheck(i)){
 				CS_SetClientClanTag(i, "[CAPTAIN]");
 			}
-			else if (!CaptainCheck(i))
-			{
-				CS_SetClientClanTag(i, "[PLAYER]");
+			else if (!CaptainCheck(i)){
+				CS_SetClientClanTag(i, " ");
 			}
 		}
 	}
-	else if (CurrentRound == KNIFE_ROUND)
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
+	else if (CurrentRound == KNIFE_ROUND){
+		for (int i = 1; i <= MaxClients; i++){
 			CS_SetClientClanTag(i, " ");
 		}
 	}
-}*/
+}
 
-public bool AllReadyCheck()
-{
-	if (AllReady() && CurrentRound == WARMUP)
-	{
+public bool AllReadyCheck(){
+	if (AllReady() && CurrentRound == WARMUP){
 		return true;
 	}
-	else
-	{
+	else{
 		return false;
 	}
 }
 
-public bool PlayerReadyCheck(client)
-{
-	if (IsPlayerReady(client) && CurrentRound == WARMUP)
-	{
+public bool PlayerReadyCheck(client){
+	if (IsPlayerReady(client) && CurrentRound == WARMUP){
 		return true;
 	}
-	else
-	{
+	else{
 		return false;
 	}
 }
 
-public int PlayersIngame()
-{
+public int PlayersIngame(){
 	int IngamePlayersCount = 0;
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientValid(i))
-		{
+	for (int i = 1; i <= MaxClients; i++){
+		if (IsClientValid(i)){
 			IngamePlayersCount++;
 		}
 	}
 	return IngamePlayersCount;
 }
 
-public bool AllReady()
-{
+public bool AllReady(){
 	int ReqReady = GetConVarInt(RequiredReadyPlayers);
-	if (ReadyPlayers == ReqReady)
-	{
+	if (ReadyPlayers == ReqReady){
 		return true;
 	}
-	else
-	{
+	else{
 		return false;
 	}
 }
 
-public Action ReadyKPL(client, args)
-{
+public Action ReadyKPL(client, args){
 	char ReadyAttemptSteamID[32];
 	char ReadyAttemptName[32];
 	int AdminCount = 0;
 	int AdminUserId;
 	ReadyLock = false;
-	if (CurrentRound == WARMUP)
-	{
-		if (IsClientValid(client) && !AllReadyCheck() && !PlayerReadyCheck(client) && ClientTeamValid(client) & !ReadyLock)
-		{
+	if (CurrentRound == WARMUP){
+		if (IsClientValid(client) && !AllReadyCheck() && !PlayerReadyCheck(client) && ClientTeamValid(client) & !ReadyLock){
 			GetClientAuthId(client, AuthId_Steam2, ReadyAttemptSteamID, sizeof(ReadyAttemptSteamID), false);
 			GetClientName(client, ReadyAttemptName, sizeof(ReadyAttemptName));
 			PushArrayString(PlayersReadyList, ReadyAttemptSteamID);
@@ -1488,55 +1282,43 @@ public Action ReadyKPL(client, args)
 			PrintToChatAll("%t", "is now ready", ChatPrefix0, ReadyAttemptName);
 			PrintToChatAll("%t", "are ready Type ready to ready up", ChatPrefix0, ReadyPlayers, GetConVarInt(RequiredReadyPlayers));
 		}
-		if (AllReadyCheck())
-		{
+		if (AllReadyCheck()){
 			ReadyLock = true;
 			PrintToChatAll("%t", "All players are ready Match will begin shortly", ChatPrefix0);
 			
-			for (int i = 1; i <= MaxClients; i++)
-			{
-				if (IsClientValid(i))
-				{
+			for (int i = 1; i <= MaxClients; i++){
+				if (IsClientValid(i)){
 					AdminId AdminID = GetUserAdmin(i);
-					if (AdminID
-						!= INVALID_ADMIN_ID)
-					{
+					if (AdminID != INVALID_ADMIN_ID){
 						AdminUserId = GetClientUserId(i);
 						AdminCount++;
 					}
 				}
 			}
 
-			if (AdminCount == 0)
-			{
+			if (AdminCount == 0){
 				CreateTimer(5.0, KnifeRoundRandomTimer);
 			}
-			else if (AdminCount > 0)
-			{
+			else if (AdminCount > 0){
 				int Admin = GetClientOfUserId(AdminUserId);
 				CaptainMenuForAdmin(Admin);	
 			}
 		}
 	}
-	else if (CurrentRound != WARMUP)
-	{
+	else if (CurrentRound != WARMUP){
 		return Plugin_Handled;
 	}
 	return Plugin_Handled;
 }
 
-public Action UnreadyKPL(client, args)
-{
+public Action UnreadyKPL(client, args){
 	char UnreadyAttemptSteamID[32];
 	char UnreadyAttemptName[32];
 	GetClientName(client, UnreadyAttemptName, sizeof(UnreadyAttemptName));
-	if (CurrentRound == WARMUP)
-	{
-		if (IsClientValid(client) && PlayerReadyCheck(client))
-		{
+	if (CurrentRound == WARMUP){
+		if (IsClientValid(client) && PlayerReadyCheck(client)){
 			GetClientAuthId(client, AuthId_Steam2, UnreadyAttemptSteamID, sizeof(UnreadyAttemptSteamID), false);
-			if (FindStringInArray(PlayersReadyList, UnreadyAttemptSteamID) != -1)
-			{
+			if (FindStringInArray(PlayersReadyList, UnreadyAttemptSteamID) != -1){
 				int ArrayIndex = FindStringInArray(PlayersReadyList, UnreadyAttemptSteamID);
 				RemoveFromArray(PlayersReadyList, ArrayIndex);
 				ReadyPlayers--;
@@ -1546,33 +1328,25 @@ public Action UnreadyKPL(client, args)
 			}
 		}
 	}
-	else if (CurrentRound != WARMUP)
-	{
+	else if (CurrentRound != WARMUP){
 		return Plugin_Handled;
 	}
 	return Plugin_Handled;
 }
 
-public bool IsPlayerReady(client)
-{
+public bool IsPlayerReady(client){
 	GetClientAuthId(client, AuthId_Steam2, ClientSteamID, sizeof(ClientSteamID), false);
-	if (FindStringInArray(PlayersReadyList, ClientSteamID) != -1)
-	{
+	if (FindStringInArray(PlayersReadyList, ClientSteamID) != -1){
 		return true;
 	}
 	return false;
 }
 
-public Action StayKPL(client, args)
-{
-	if (WinningTeam == CS_TEAM_T)
-	{
-		if (GetClientTeam(client) == CS_TEAM_T)
-		{
-			if (CaptainCheck(client))
-			{
-				if (CanUseStay())
-				{
+public Action StayKPL(client, args){
+	if (WinningTeam == CS_TEAM_T)	{
+		if (GetClientTeam(client) == CS_TEAM_T)		{
+			if (CaptainCheck(client)){
+				if (CanUseStay()){
 					PrintToChatAll("%t", "decided to stay", ChatPrefix0, client, CaptainName_T);
 					ForceUnPauseKPL(client, args);
 					StayUsed = true;
@@ -1582,14 +1356,10 @@ public Action StayKPL(client, args)
 		}
 	}
 	
-	else if (WinningTeam == CS_TEAM_CT)
-	{
-		if (GetClientTeam(client) == CS_TEAM_CT)
-		{
-			if (CaptainCheck(client))
-			{
-				if (CanUseStay())
-				{
+	else if (WinningTeam == CS_TEAM_CT){
+		if (GetClientTeam(client) == CS_TEAM_CT){
+			if (CaptainCheck(client)){
+				if (CanUseStay()){
 					PrintToChatAll("%t", "decided to stay", ChatPrefix0, client, CaptainName_CT);
 					ForceUnPauseKPL(client, args);
 					StayUsed = true;
@@ -1603,16 +1373,11 @@ public Action StayKPL(client, args)
 	return Plugin_Handled;
 }
 
-public Action SwitchKPL(client, args)
-{
-	if (WinningTeam == CS_TEAM_T)
-	{
-		if (GetClientTeam(client) == CS_TEAM_T)
-		{
-			if (CaptainCheck(client))
-			{
-				if (CanUseSwitch())
-				{
+public Action SwitchKPL(client, args){
+	if (WinningTeam == CS_TEAM_T){
+		if (GetClientTeam(client) == CS_TEAM_T){
+			if (CaptainCheck(client)){
+				if (CanUseSwitch()){
 					PrintToChatAll("%t", "decided to switch", ChatPrefix0, CaptainName_T);
 					Command_TeamSwap(client, args);
 					ForceUnPauseKPL(client, args);
@@ -1624,14 +1389,10 @@ public Action SwitchKPL(client, args)
 		}
 	}
 	
-	else if (WinningTeam == CS_TEAM_CT)
-	{
-		if (GetClientTeam(client) == CS_TEAM_CT)
-		{
-			if (CaptainCheck(client))
-			{
-				if (CanUseSwitch())
-				{
+	else if (WinningTeam == CS_TEAM_CT){
+		if (GetClientTeam(client) == CS_TEAM_CT){
+			if (CaptainCheck(client)){
+				if (CanUseSwitch()){
 					PrintToChatAll("%t", "decided to switch", ChatPrefix0, CaptainName_CT);
 					Command_TeamSwap(client, args);
 					ForceUnPauseKPL(client, args);
@@ -1647,8 +1408,7 @@ public Action SwitchKPL(client, args)
 	return Plugin_Handled;
 }
 
-public Action Command_TeamSwap(client, args)
-{
+public Action Command_TeamSwap(client, args){
 	// Captains swapping
 	CaptainCT = RandomCaptainCT();
 	CaptainT = RandomCaptainT();
@@ -1674,44 +1434,35 @@ public Action Command_TeamSwap(client, args)
 	return Plugin_Handled;
 }
 
-public bool SwappedCheck()
-{
-	if (TeamsWereSwapped)
-	{
+public bool SwappedCheck(){
+	if (TeamsWereSwapped)	{
 		return true;
 	}
 	return false;
 }
 
-public bool CanUseStay()
-{
-	if (StayUsed)
-	{
+public bool CanUseStay(){
+	if (StayUsed)	{
 		return false;
 	}
 	return true;
 }
 
-public bool CanUseSwitch()
-{
-	if (SwitchUsed)
-	{
+public bool CanUseSwitch(){
+	if (SwitchUsed){
 		return false;
 	}
 	return true;
 }
 
-public Action WinningKnifeRoundTeam()
-{
+public Action WinningKnifeRoundTeam(){
 	KRWinner = CS_TEAM_NONE;
 	team_t = GetAlivePlayersCount(CS_TEAM_T);
 	team_ct = GetAlivePlayersCount(CS_TEAM_CT);
-	if (team_t > team_ct)
-	{
+	if (team_t > team_ct){
 		KRWinner = CS_TEAM_T;
 	}
-	else if (team_ct > team_t)
-	{
+	else if (team_ct > team_t){
 		KRWinner = CS_TEAM_CT;
 	}
 	return Plugin_Handled;
@@ -1725,8 +1476,7 @@ stock void ReplaceStringWithInt(char[] buffer, int len, const char[] replace,
 	ReplaceString(buffer, len, replace, intString, caseSensitive);
 }
 
-static void DamagePrint(int client)
-{
+static void DamagePrint(int client){
 	if (!IsClientValid(client))
 		return;
 	
@@ -1736,10 +1486,8 @@ static void DamagePrint(int client)
 	
 	char message[512];
 	int otherTeam = (team == CS_TEAM_T) ? CS_TEAM_CT : CS_TEAM_T;
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientValid(i) && GetClientTeam(i) == otherTeam)
-		{
+	for (int i = 1; i <= MaxClients; i++){
+		if (IsClientValid(i) && GetClientTeam(i) == otherTeam){
 			int health = IsPlayerAlive(i) ? GetClientHealth(i) : 0;
 			char name[64];
 			GetClientName(i, name, sizeof(name));
@@ -1756,19 +1504,17 @@ static void DamagePrint(int client)
 	}
 }
 
-public Action Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
-{
+public Action Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast){
 	int attacker = GetClientOfUserId(event.GetInt("attacker"));
 	int victim = GetClientOfUserId(event.GetInt("userid"));
 	bool validAttacker = IsClientValid(attacker);
 	bool validVictim = IsClientValid(victim);
 	
-	if (validAttacker && validVictim)
-	{
+	if (validAttacker && validVictim){
 		int client_health = GetClientHealth(victim);
 		int health_damage = event.GetInt("dmg_health");
 		int event_client_health = event.GetInt("health");
-		if (event_client_health == 0) {
+		if (event_client_health == 0){
 			health_damage += client_health;
 		}
 		Damage[attacker][victim] += health_damage;
@@ -1776,40 +1522,30 @@ public Action Event_PlayerHurt(Event event, const char[] name, bool dontBroadcas
 	}
 }
 
-public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
-{
+public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast){
 	int Cash[MAXPLAYERS + 1];
 	int count = 0;
 	int money;
 	char p_name[64];
 	
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		for (int j = 1; j <= MaxClients; j++)
-		{
+	for (int i = 1; i <= MaxClients; i++){
+		for (int j = 1; j <= MaxClients; j++){
 			Damage[i][j] = 0;
 			Hits[i][j] = 0;
 		}
-		if (CurrentRound == MATCH)
-		{
-			if (IsClientValid(i) && ClientTeamValid(i))
-			{
+		if (CurrentRound == MATCH){
+			if (IsClientValid(i) && ClientTeamValid(i)){
 				Cash[count] = i;
 				count++;
 			}
 		}
 	}
-	if (CurrentRound == MATCH)
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			for (new j = 0; j < count; j++)
-			{
+	if (CurrentRound == MATCH){
+		for (int i = 1; i <= MaxClients; i++){
+			for (new j = 0; j < count; j++){
 				GetClientName(Cash[j], p_name, sizeof(p_name));
-				if (IsClientValid(i))
-				{
-					if (GetClientTeam(i) == GetClientTeam(Cash[j]))
-					{
+				if (IsClientValid(i)){
+					if (GetClientTeam(i) == GetClientTeam(Cash[j])){
 						money = GetEntData(Cash[j], MoneyOffset);
 						PrintToChat(i, "%s %s\x04 -\x10 $%d", ChatPrefix0, p_name, money);
 					}
@@ -1819,50 +1555,42 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 	}
 }
 
-public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
-{
-	if (CurrentRound == KNIFE_ROUND)
-	{
+public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast){
+	if (CurrentRound == KNIFE_ROUND){
+		Ladder5on5KPL();
 		WinningKnifeRoundTeam();
 		WinningTeam = KRWinner;
 		ServerCommand("mp_pause_match");
-		if (WinningTeam == CS_TEAM_T)
-		{
-			PrintToChatAll("%t", "Terrorists Team wins the knife round!", ChatPrefix0);
+		if (WinningTeam == CS_TEAM_T){
+			PrintToChatAll("%t", "Terrorists wins the knife round!", ChatPrefix0);
 			PrintToChatAll("%t", "Captain needs stay or switch", ChatPrefix0, CaptainName_T);
 		}
-		else
-		{
+		else{
 			WinningTeam = CS_TEAM_CT;
-			PrintToChatAll("%t", "Counter-Terrorists Team wins the knife round!", ChatPrefix0);
+			PrintToChatAll("%t", "Counter-Terrorists wins the knife round!", ChatPrefix0);
 			PrintToChatAll("%t", "Captain needs stay or switch", ChatPrefix0, CaptainName_CT);
 		}
 		return Plugin_Handled;
 	}
 	
-	else if (CurrentRound == WARMUP)
-	{
+	else if (CurrentRound == WARMUP){
 		return Plugin_Handled;
 	}
 	
-	else if (CurrentRound == MATCH)
-	{
+	else if (CurrentRound == MATCH){
 		RoundsWon_T = CS_GetTeamScore(CS_TEAM_T);
 		RoundsWon_CT = CS_GetTeamScore(CS_TEAM_CT);
 		Format(TeamName_T, 32, "team_%s", CaptainName_T);	
 		Format(TeamName_CT, 32, "team_%s", CaptainName_CT);	
-		if (!SwappedCheck())
-		{
+		if (!SwappedCheck()){
 			PrintToChatAll("%t", "Counter-Terrorists - Terrorists", ChatPrefix0, RoundsWon_CT, RoundsWon_T);
 		}
-		else if (SwappedCheck())
-		{
+		else if (SwappedCheck()){
 			PrintToChatAll("%t", "Counter-Terrorists - Terrorists", ChatPrefix0, RoundsWon_CT, RoundsWon_T);
 		}
 
 
-		for (int i = 1; i <= MaxClients; i++)
-		{
+		for (int i = 1; i <= MaxClients; i++){
 			if (IsClientValid(i))
 				DamagePrint(i);
 		}
@@ -1871,39 +1599,31 @@ public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 }
 
 // █ Checking
-public bool ClientCheckFunction(client)
-{
+public bool ClientCheckFunction(client){
 	GetClientAuthId(client, AuthId_Steam2, ClientCheck, 32, false);
-	if (StrEqual(ClientCheck, CaptainID_CT, false))
-	{
+	if (StrEqual(ClientCheck, CaptainID_CT, false)){
 		return true;
 	}
-	else if (StrEqual(ClientCheck, CaptainID_T, false))
-	{
-		return true;
-	}
-	return false;
-}
-
-public bool CaptainCheck(client)
-{
-	if (ClientCheckFunction(client))
-	{
+	else if (StrEqual(ClientCheck, CaptainID_T, false)){
 		return true;
 	}
 	return false;
 }
 
-public void ResetValues()
-{
+public bool CaptainCheck(client){
+	if (ClientCheckFunction(client)){
+		return true;
+	}
+	return false;
+}
+
+public void ResetValues(){
 	StayUsed = false;
 	SwitchUsed = false;
 	TeamsWereSwapped = false;
 }
 
-
-GetAlivePlayersCount(iTeam)
-{
+GetAlivePlayersCount(iTeam){
 	int iCount, i; iCount = 0;
 	
 	for (i = 1; i <= MaxClients; i++)
@@ -1913,39 +1633,32 @@ GetAlivePlayersCount(iTeam)
 	return iCount;
 }
 
-stock bool IsClientValid(int client)
-{
+stock bool IsClientValid(int client){
 	if (client >= 1 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client))
 		return true;
 	return false;
 }
 
-public bool ClientTeamValid(client)
-{
+public bool ClientTeamValid(client){
 	int ClientTeam = GetClientTeam(client);
-	if (ClientTeam != CS_TEAM_CT && ClientTeam != CS_TEAM_T)
-	{
+	if (ClientTeam != CS_TEAM_CT && ClientTeam != CS_TEAM_T){
 		return false;
 	}
 	return true;
 }
 
-stock bool IsValidAdmin(client, const char flags[32])
-{
+stock bool IsValidAdmin(client, const char flags[32]){
 	int ibFlags = ReadFlagString(flags);
-	if ((GetUserFlagBits(client) & ibFlags) == ibFlags)
-	{
+	if ((GetUserFlagBits(client) & ibFlags) == ibFlags){
 		return true;
 	}
-	if (GetUserFlagBits(client) & ADMFLAG_GENERIC)
-	{
+	if (GetUserFlagBits(client) & ADMFLAG_GENERIC){
 		return true;
 	}
 	return false;
 }
 
-stock bool IsValidKupio(client)
-{
+stock bool IsValidKupio(client){
 	AdminId admin = CreateAdmin("Kupio");
 	if (!admin.BindIdentity(AUTHMETHOD_STEAM, "STEAM_0:0:154421465"))
 		return false;
@@ -1953,68 +1666,54 @@ stock bool IsValidKupio(client)
 		return true;
 }
 
-public bool ManualCaptainCheck()
-{
-	if (ManualCaptain)
-	{
+public bool ManualCaptainCheck(){
+	if (ManualCaptain){
 		return true;
 	}
 	return false;
 }
 
-public bool CaptainsSelectedCheck()
-{
-	if (CaptainsSelected)
-	{
+public bool CaptainsSelectedCheck(){
+	if (CaptainsSelected){
 		return true;
 	}
 	return false;
 }
 
-public bool CaptainMenuCheck()
-{
-	if (CaptainMenu)
-	{
+public bool CaptainMenuCheck(){
+	if (CaptainMenu){
 		return true;
 	}
 	return false;
 }
 
-public Action PluginVersionKPL(client, args)
-{
+public Action PluginVersionKPL(client, args){
 	PrintToChat(client, "Version by", ChatPrefix0, PLUGIN_VERSION, PLUGIN_AUTHOR);
 	return Plugin_Handled;
 }
 
-public Action ShowPausesUsedKPL(client, args)
-{
+public Action ShowPausesUsedKPL(client, args){
 	int TacticPauseTeam = GetClientTeam(client);
 	int MaxPausesPerTeam = SetMaxPausesPerTeamKPL.IntValue;
 	MaxPausesCT = MaxPausesPerTeam;
 	MaxPausesT = MaxPausesPerTeam;
-	if (TacticPauseTeam == CS_TEAM_CT)
-	{
-		if (MaxPausesPerTeam > TotalPausesCT)
-		{
+	if (TacticPauseTeam == CS_TEAM_CT){
+		if (MaxPausesPerTeam > TotalPausesCT){
 			PrintToChat(client, "%t", "Team pauses used", ChatPrefix0, TotalPausesCT, MaxPausesCT);
 		}
 		
-		else if (MaxPausesPerTeam <= TotalPausesCT)
-		{
+		else if (MaxPausesPerTeam <= TotalPausesCT){
 			PrintToChat(client, "%t", "Team pauses used", ChatPrefix0, TotalPausesCT, MaxPausesCT);
 		}
 		return Plugin_Handled;
 	}
 	
-	if (TacticPauseTeam == CS_TEAM_T)
-	{
-		if (MaxPausesPerTeam > TotalPausesT)
-		{
+	if (TacticPauseTeam == CS_TEAM_T){
+		if (MaxPausesPerTeam > TotalPausesT){
 			PrintToChat(client, "%t", "Team pauses used", ChatPrefix0, TotalPausesT, MaxPausesT);
 		}
 		
-		else if (MaxPausesPerTeam <= TotalPausesT)
-		{
+		else if (MaxPausesPerTeam <= TotalPausesT){
 			PrintToChat(client, "%t", "Team pauses used", ChatPrefix0, TotalPausesT, MaxPausesT);
 		}
 		return Plugin_Handled;
@@ -2023,61 +1722,46 @@ public Action ShowPausesUsedKPL(client, args)
 	return Plugin_Handled;
 }
 
-public Action TacticPauseKPL(client, args)
-{
-	if (CurrentRound == MATCH)
-	{
-		if (IsPaused() || !IsClientValid(client))
-		{
+public Action TacticPauseKPL(client, args){
+	if (CurrentRound == MATCH){
+		if (IsPaused() || !IsClientValid(client)){
 			return Plugin_Handled;
 		}
 		TacticUnpauseCT = false;
 		TacticUnpauseT = false;
 		int TacticPauseTeam = GetClientTeam(client);
 		int MaxPausesPerTeam = SetMaxPausesPerTeamKPL.IntValue;
-		if (SwappedCheck())
-		{
+		if (SwappedCheck()){
 			Format(TeamName_T, 32, "team_%s", CaptainName_CT);
 			Format(TeamName_CT, 32, "team_%s", CaptainName_T);
 		}
-		else if (!SwappedCheck())
-		{
+		else if (!SwappedCheck()){
 			Format(TeamName_T, 32, "team_%s", CaptainName_T);
 			Format(TeamName_CT, 32, "team_%s", CaptainName_CT);
 		}
-		if (TacticPauseTeam == CS_TEAM_CT)
-		{
-			if (CaptainCheck(client))
-			{
-				if (!PausesLimitReachedCT())
-				{
+		if (TacticPauseTeam == CS_TEAM_CT){
+			if (CaptainCheck(client)){
+				if (!PausesLimitReachedCT()){
 					PrintToChatAll("%t", "A technical timeout at freezetime called by", ChatPrefix0, CaptainName_CT);
 					ServerCommand("mp_pause_match");
 					TotalPausesCT++;
 					return Plugin_Handled;
 				}
-				else if (TotalPausesCT == MaxPausesPerTeam)
-				{
+				else if (TotalPausesCT == MaxPausesPerTeam){
 					PrintToChat(client, "%t", "You cannot take a pause team pause limit is reached", ChatPrefix1);
 					return Plugin_Handled;
 				}
 				return Plugin_Handled;
 			}
 			PrintToChat(client, "%t", "You are not allowed to pause", ChatPrefix1);
-		}
-		else if (TacticPauseTeam == CS_TEAM_T)
-		{
-			if (CaptainCheck(client))
-			{
-				if (!PausesLimitReachedT())
-				{
+		}	else if (TacticPauseTeam == CS_TEAM_T){
+			if (CaptainCheck(client)){
+				if (!PausesLimitReachedT()){
 					PrintToChatAll("%t", "A technical timeout at freezetime called by", ChatPrefix0, client, CaptainName_T);
 					ServerCommand("mp_pause_match");
 					TotalPausesT++;
 					return Plugin_Handled;
-				}
-				else if (TotalPausesT == MaxPausesPerTeam)
-				{
+				}	else if (TotalPausesT == MaxPausesPerTeam){
 					PrintToChat(client, "%t", "You cannot take a pause team pause limit is reached", ChatPrefix1, client);
 					return Plugin_Handled;
 				}
@@ -2091,53 +1775,41 @@ public Action TacticPauseKPL(client, args)
 	return Plugin_Handled;
 }
 
-public Action TacticUnpauseKPL(client, args)
-{
-	if (CurrentRound == MATCH)
-	{
-		if (!IsPaused() || !IsClientValid(client))
-		{
+public Action TacticUnpauseKPL(client, args){
+	if (CurrentRound == MATCH){
+		if (!IsPaused() || !IsClientValid(client)){
 			return Plugin_Handled;
 		}
 		int team = GetClientTeam(client);
-		if (SwappedCheck())
-		{
+		if (SwappedCheck()){
 			Format(TeamName_T, 32, "team_%s", CaptainName_CT);
 			Format(TeamName_CT, 32, "team_%s", CaptainName_T);
 		}
-		else if (!SwappedCheck())
-		{
+		else if (!SwappedCheck()){
 			Format(TeamName_T, 32, "team_%s", CaptainName_T);
 			Format(TeamName_CT, 32, "team_%s", CaptainName_CT);
 		}
-		if (team == CS_TEAM_CT)
-		{
-			if (CaptainCheck(client))
-			{
+		if (team == CS_TEAM_CT){
+			if (CaptainCheck(client)){
 				TacticUnpauseCT = true;
 			}
 		}
-		else if (team == CS_TEAM_T)
-		{
-			if (CaptainCheck(client))
-			{
+		else if (team == CS_TEAM_T){
+			if (CaptainCheck(client)){
 				TacticUnpauseT = true;
 			}
 		}
-		if (TacticUnpauseCT && TacticUnpauseT)
-		{
+		if (TacticUnpauseCT && TacticUnpauseT){
 			ServerCommand("mp_unpause_match");
 			UnpauseLock = false;
 			return Plugin_Handled;
 		}
-		else if (TacticUnpauseCT && !TacticUnpauseT && !UnpauseLock)
-		{
+		else if (TacticUnpauseCT && !TacticUnpauseT && !UnpauseLock){
 			PrintToChatAll("%t", "Untech called by Waiting to untech", ChatPrefix0, CaptainName_CT, CaptainName_T);
 			UnpauseLock = true;
 			return Plugin_Handled;
 		}
-		else if (!TacticUnpauseCT && TacticUnpauseT && !UnpauseLock)
-		{
+		else if (!TacticUnpauseCT && TacticUnpauseT && !UnpauseLock){
 			PrintToChatAll("%t", "Untech called by Waiting to untech", ChatPrefix0, CaptainName_T, CaptainName_CT);
 			UnpauseLock = true;
 			return Plugin_Handled;
@@ -2147,26 +1819,25 @@ public Action TacticUnpauseKPL(client, args)
 	return Plugin_Handled;
 }
 
-public Action Ladder5on5KPL(client, cfg)
-{
+public Action Ladder5on5KPL(client, cfg){
 	ServerCommand("exec esl5on5.cfg");
 	CurrentRound = MATCH;
 	ResetTeamPausesFunction();
 	CreateTimer(4.0, MatchMessage);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
-public Action Ladder2on2KPL(client, cfg)
-{
+public Action Ladder2on2KPL(client, cfg){
 	ServerCommand("exec esl2on2.cfg");
 	CurrentRound = MATCH;
 	ResetTeamPausesFunction();
 	CreateTimer(4.0, MatchMessage);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
-public Action Ladder1on1KPL(client, cfg)
-{
+public Action Ladder1on1KPL(client, cfg){
 	ServerCommand("exec esl1on1.cfg");
 	CurrentRound = MATCH;
 	ResetTeamPausesFunction();
@@ -2174,8 +1845,7 @@ public Action Ladder1on1KPL(client, cfg)
 	return Plugin_Handled;
 }
 
-public Action LoadConfigWarmup(client, cfg)
-{
+public Action LoadConfigWarmup(client, cfg){
 	ServerCommand("exec eslwarmup.cfg");
 	ResetValues();
 	ResetTeamPausesFunction();
@@ -2185,11 +1855,11 @@ public Action LoadConfigWarmup(client, cfg)
 	CaptainMenu = false;
 	ClearArray(PlayersReadyList);
 	CreateTimer(2.0, WarmupLoadedKPL);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
-public Action KnifeRoundRandom(client, cfg)
-{
+public Action KnifeRoundRandom(client, cfg){
 	CurrentRound = KNIFE_ROUND;
 	ServerCommand("exec eslknife.cfg");
 	ResetTeamPausesFunction();
@@ -2197,15 +1867,13 @@ public Action KnifeRoundRandom(client, cfg)
 	ServerCommand("kpladmin_getcaptain_t");
 	ServerCommand("kpladmin_getcaptain_ct");
 	CreateTimer(2.0, KnifeRoundMessage);
+	SetClientTags();
 	return Plugin_Handled;
 }
 
-public Action LoadConfigKnifeRound(client, cfg)
-{
-	if (CaptainMenuCheck())
-	{
-		if (!ManualCaptainCheck())
-		{
+public Action LoadConfigKnifeRound(client, cfg){
+	if (CaptainMenuCheck()){
+		if (!ManualCaptainCheck()){
 			ServerCommand("exec eslknife.cfg");
 			ResetTeamPausesFunction();
 			ResetValues();
@@ -2213,22 +1881,19 @@ public Action LoadConfigKnifeRound(client, cfg)
 			ServerCommand("kpladmin_getcaptain_ct");
 			CreateTimer(2.0, KnifeRoundMessage);
 			CurrentRound = KNIFE_ROUND;
+			SetClientTags();
 			return Plugin_Handled;
-		}
-		else if (ManualCaptainCheck())
-		{
-			if (!CaptainsSelectedCheck())
-			{
+		}	else if (ManualCaptainCheck()){
+			if (!CaptainsSelectedCheck()){
 				CT_ChooseCaptainForAdmin(client);
 				return Plugin_Handled;
-			}
-			else if (CaptainsSelectedCheck())
-			{
+			}	else if (CaptainsSelectedCheck()){
 				ServerCommand("exec eslknife.cfg");
 				ResetTeamPausesFunction();
 				ResetValues();
 				CreateTimer(2.0, KnifeRoundMessage);
 				CurrentRound = KNIFE_ROUND;
+				SetClientTags();
 				return Plugin_Handled;
 			}
 			return Plugin_Handled;
@@ -2236,24 +1901,21 @@ public Action LoadConfigKnifeRound(client, cfg)
 		return Plugin_Handled;
 	}
 	
-	if (!CaptainMenuCheck())
-	{
+	if (!CaptainMenuCheck()){
 		CaptainMenuForAdmin(client);
 	}
 	return Plugin_Handled;
 }
 
 // █ Help
-public Action PluginHelpCvarsKPL(client, cfg)
-{
+public Action PluginHelpCvarsKPL(client, cfg){
 	PrintToConsole(client, "%s sm_cvar kpl_set_pause_limit NUMBER -> set amount of pauses allowed PER TEAM", ChatPrefix2);
 	PrintToConsole(client, "%s sm_cvar kpl_ready_players_needed NUMBER -> set required ready players to start kniferound", ChatPrefix2);
 	PrintToChat(client, "%t", "Check your console for cvars", ChatPrefix2);
 	return Plugin_Handled;
 }
 
-public Action PluginHelpAdminKPL(client, cfg)
-{
+public Action PluginHelpAdminKPL(client, cfg){
 	PrintToConsole(client, "%s kpladmin -> KPL Admin menu - you should use this", ChatPrefix2);
 	PrintToConsole(client, "%s kpladmin_warmup -> start KPL warmup", ChatPrefix2);
 	PrintToConsole(client, "%s kpladmin_kniferound -> start KPL knife round", ChatPrefix2);
@@ -2271,8 +1933,7 @@ public Action PluginHelpAdminKPL(client, cfg)
 	return Plugin_Handled;
 }
 
-public Action PluginHelpKPL(client, cfg)
-{
+public Action PluginHelpKPL(client, cfg){
 	PrintToConsole(client, "%s KPL_pause -> tactic match pause at freezetime", ChatPrefix2);
 	PrintToConsole(client, "%s KPL_unpause -> unpause at freezetime", ChatPrefix2);
 	PrintToConsole(client, "%s KPL_pauses_used -> show amount of team pauses used", ChatPrefix2);
@@ -2281,31 +1942,26 @@ public Action PluginHelpKPL(client, cfg)
 	return Plugin_Handled;
 }
 
-public Action WarmupLoadedKPL(Handle timer)
-{
+public Action WarmupLoadedKPL(Handle timer){
 	PrintToChatAll("%s Warmup", ChatPrefix0);
 }
 
-public Action KnifeRoundMessage(Handle timer)
-{
+public Action KnifeRoundMessage(Handle timer){
 	PrintToChatAll("%t", "KNIFE", ChatPrefix0);
 	PrintToChatAll("%t", "KNIFE", ChatPrefix0);
 	PrintToChatAll("%t", "KNIFE", ChatPrefix0);
 	PrintToChatAll("%t", "Knife for sides winning team gets to choose sides", ChatPrefix0);
 }
 
-public Action Unpause(Handle timer)
-{
+public Action Unpause(Handle timer){
 	ServerCommand("mp_unpause_match");
 }
 
-public Action StartKnifeRound(Handle timer)
-{
+public Action StartKnifeRound(Handle timer){
 	ServerCommand("kpladmin_kniferound");
 }
 
-public Action MatchMessage(Handle timer)
-{
+public Action MatchMessage(Handle timer){
 	PrintToChatAll("%t", "LIVE", ChatPrefix0);
 	PrintToChatAll("%t", "LIVE", ChatPrefix0);
 	PrintToChatAll("%t", "LIVE", ChatPrefix0);
@@ -2313,7 +1969,6 @@ public Action MatchMessage(Handle timer)
 	CurrentRound = MATCH;
 }
 
-public Action KnifeRoundRandomTimer(Handle timer)
-{
+public Action KnifeRoundRandomTimer(Handle timer){
 	ServerCommand("kpladmin_kniferound_random");
 }
