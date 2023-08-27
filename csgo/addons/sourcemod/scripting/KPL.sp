@@ -166,7 +166,7 @@ public OnMapStart(){
 	MaxPausesT = MaxPausesPerTeam;
 	CaptainMenu = false;
 	ManualCaptain = true;
-	LoadConfigWarmup();
+	ServerCommand("kpladmin_warmup");
 	ResetValues();
 	ClearArray(PlayersReadyList);
 	CurrentRound = WARMUP;
@@ -1557,7 +1557,7 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 
 public Action Event_RoundEnd(Event event, const char[] name, bool dontBroadcast){
 	if (CurrentRound == KNIFE_ROUND){
-		Ladder5on5KPL();
+		ServerCommand("kpladmin_match5v5");
 		WinningKnifeRoundTeam();
 		WinningTeam = KRWinner;
 		ServerCommand("mp_pause_match");
