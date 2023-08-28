@@ -9,6 +9,10 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Plugin Maintaining 3.1.1 - 28 Aug 2023
+- Load ESL configs within a server command instead of sourcemod command
+- Update nolobbyreservation gamedata as of 2022-10-22 csgo update
+
 === Plugin Testing 3.1 - 11 Dec 2021
 + Added Client Tag System [READY], [CAPTAIN], etc..
 

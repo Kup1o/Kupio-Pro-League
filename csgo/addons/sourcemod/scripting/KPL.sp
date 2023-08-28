@@ -3,7 +3,7 @@
 
 #define DEBUG
 #define PLUGIN_AUTHOR "kup1o"
-#define PLUGIN_VERSION "3.1"
+#define PLUGIN_VERSION "3.1.1"
 #define NONE 0
 #define SPEC 1
 #define TEAM1 2

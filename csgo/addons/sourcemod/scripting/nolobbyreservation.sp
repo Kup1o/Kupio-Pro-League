@@ -8,7 +8,7 @@ public Plugin myinfo =
 {
 	name = "[Kupio Pro League] Lobby",
 	author = "vanz",
-	version = "0.0.2"
+	version = "0.0.3"
 };
 
 enum struct mem_patch
