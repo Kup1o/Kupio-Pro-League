@@ -512,6 +512,7 @@ public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2){
 	}
 }
 
+// Currently does not work
 public CaptainMenuForAdmin(client){
 	Handle menu = CreateMenu(Handler_ChooseCaptain_Question, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Question", client);
