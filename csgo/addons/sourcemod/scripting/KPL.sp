@@ -827,12 +827,12 @@ public AdminHandlerKPL(Handle menu, MenuAction action, param1, param2){
 			}
 			
 			else if (StrEqual(info, "Get new СT captain")){
-				CT_ChooseCaptainForAdmin(param1);
+				GetCaptainCT(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
 			else if (StrEqual(info, "Get new T captain")){
-				T_ChooseCaptainForAdmin(param1);
+				GetCaptainT(param1, args);
 				AdminMenuKPL(param1);
 			}
 			
