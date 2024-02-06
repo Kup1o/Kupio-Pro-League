@@ -348,7 +348,7 @@
 		"en"	"{1} LIVE!"
 	}
 
-	"Please be aware that this match has overtime enabled There is no tie"
+	"Please be aware that this match has overtime enabled. There is no tie."
 	{
 		"#format"	"{1:s}"
 		"en"	"{1} Please be aware that this match has overtime enabled. There is no tie."

@@ -348,7 +348,7 @@
 		"ru"	"{1} Матч начался!"
 	}
 
-	"Please be aware that this match has overtime enabled There is no tie"
+	"Please be aware that this match has overtime enabled. There is no tie."
 	{
 		"#format"	"{1:s}"
 		"ru"	"{1} Имейте в виду, что в этом матче включено дополнительное время. Здесь нет ничьи."

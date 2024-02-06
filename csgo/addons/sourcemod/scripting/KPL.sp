@@ -1965,7 +1965,7 @@ public Action MatchMessage(Handle timer){
 	PrintToChatAll("%t", "LIVE", ChatPrefix0);
 	PrintToChatAll("%t", "LIVE", ChatPrefix0);
 	PrintToChatAll("%t", "LIVE", ChatPrefix0);
-	PrintToChatAll("%t", "Please be aware that this match has overtime enabled. There is no tie", ChatPrefix0);
+	PrintToChatAll("%t", "Please be aware that this match has overtime enabled. There is no tie.", ChatPrefix0);
 	CurrentRound = MATCH;
 }
 

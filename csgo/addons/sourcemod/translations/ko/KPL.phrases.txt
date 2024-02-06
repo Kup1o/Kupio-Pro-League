@@ -345,7 +345,7 @@
 		"ko"	"{1} 경기가 시작되었습니다"
 	}
 
-	"Please be aware that this match has overtime enabled There is no tie"
+	"Please be aware that this match has overtime enabled. There is no tie."
 	{
 		"#format"	"{1:s}"
 		"ko"	"{1} 이 경기에는 연장전이 포함되어 있습니다. 여기에는 무승부가 없습니다."
