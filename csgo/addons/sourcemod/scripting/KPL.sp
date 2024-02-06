@@ -1426,6 +1426,8 @@ public Action Command_TeamSwap(client, args){
 	CaptainName_T = CaptainName_TEMP;
 	CaptainID_T = CaptainID_TEMP;
 
+	// There would be a team names swap
+
 	ServerCommand("mp_swapteams");
 	int ts = GetTeamScore(TEAM1);
 	SetTeamScore(TEAM1, GetTeamScore(TEAM2));
