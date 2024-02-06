@@ -297,7 +297,7 @@ stock bool SplitStringRight(const char[] source, const char[] split, char[] part
 	return true;
 }
 
-/*void AddTranslatedMenuItem(Menu menu, const char[] info, const char[] display){
+/*void AddTranslatedMenuItem(Handle menu, const char[] info, const char[] display){
 	char buffer[128];
 	Format(buffer, sizeof(buffer), display);
 	AddMenuItem(menu, info, buffer);
@@ -360,7 +360,7 @@ public Action Command_Team(client, args){
 }
 
 public SetTeamMenu(client){
-	Handle menu = CreateMenu(Handler_SetTeamMenu);
+	Handle menu = CreateMenu(Handler_SetTeamMenu, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Set Team Menu", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -403,7 +403,7 @@ public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2){
 }
 
 public SetTeamMenu_TeamSelect(client){
-	Menu menu = new Menu(Handler_SetTeamMenu_TeamSelect);
+	Handle menu = CreateMenu(Handler_SetTeamMenu_TeamSelect);
 	SetMenuTitle(menu, "Set Team Select Menu", client);
 	AddMenuItem(menu, "CT", "CT", client);
 	AddMenuItem(menu, "T", "T", client);
@@ -468,7 +468,7 @@ public Action Command_Spec(client, args){
 }
 
 public SpecMenu(client){
-	Menu menu = new Menu(Handler_SpecMenu);
+	Handle menu = CreateMenu(Handler_SpecMenu, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Spec Menu", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -522,7 +522,7 @@ public CaptainMenuForAdmin(client){
 }
 
 public CT_ChooseCaptainForAdmin(client){
-	Menu menu = new Menu(Handler_ChooseCaptain_CT);
+	Handle menu = CreateMenu(Handler_ChooseCaptain_CT, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Selection CT", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -543,7 +543,7 @@ public CT_ChooseCaptainForAdmin(client){
 }
 
 public T_ChooseCaptainForAdmin(client){
-	Menu menu = new Menu(Handler_ChooseCaptain_T);
+	Handle menu = CreateMenu(Handler_ChooseCaptain_T, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Selection T", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -665,7 +665,7 @@ public Handler_ChooseCaptain_T(Handle menu, MenuAction action, param1, param2){
 }
 
 public CT_ChooseCaptainForAdminMenu(client){
-	Menu menu = new Menu(Handler_ChooseCaptain_CT_From_AdminMenu);
+	Handle menu = CreateMenu(Handler_ChooseCaptain_CT_From_AdminMenu, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Selection CT", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -686,7 +686,7 @@ public CT_ChooseCaptainForAdminMenu(client){
 }
 
 public T_ChooseCaptainForAdminMenu(client){
-	Menu menu = new Menu(Handler_ChooseCaptain_T_From_AdminMenu);
+	Handle menu = CreateMenu(Handler_ChooseCaptain_T_From_AdminMenu, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Selection T", client);
 	for (int i = 1; i <= MaxClients; i++)	{
 		if (!IsClientValid(i))
@@ -1005,7 +1005,7 @@ public Action Command_Swap(client, args){
 }
 
 public SwapMenu(client){
-	Handle menu = CreateMenu(Handler_SwapMenu);
+	Handle menu = CreateMenu(Handler_SwapMenu, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Swap Menu", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -1072,7 +1072,7 @@ public Action Command_Exchange(client, args){
 }
 
 public ExchangePlayersMenu(client){
-	Handle menu = CreateMenu(Handler_ExchangePlayersMenu);
+	Handle menu = CreateMenu(Handler_ExchangePlayersMenu, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Exchange Players Menu", client);
 	for (int i = 1; i <= MaxClients; i++){
 		if (!IsClientValid(i))
@@ -1115,7 +1115,7 @@ public Handler_ExchangePlayersMenu(Handle menu, MenuAction action, param1, param
 }
 
 public ExchangePlayersMenu_ExchangeWith(client){
-	Handle menu = CreateMenu(Handler_ExchangePlayersMenu_ExchangeWith);
+	Handle menu = CreateMenu(Handler_ExchangePlayersMenu_ExchangeWith, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Exchange Players With Menu", client);
 	for (int i = 1; i <= MaxClients; i++)	{
 		if (!IsClientValid(i))
