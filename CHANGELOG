@@ -9,6 +9,14 @@
    ! Important - Take note!
 ===============================================================================
 
+=== Plugin Releasing 1.0.0 - 6 Feb 2024
+! Force version plugin to 1.0.0
+! Manual captain selection in admin panel does not work
+! Admin panel is not translated
+! Team names cannot swap after teams were swapped
+- Fix unclickable menu buttons in admin panel
+- Fix missing translations
+
 === Plugin Maintaining 3.1.1 - 28 Aug 2023
 - Load ESL configs within a server command instead of sourcemod command
 - Update nolobbyreservation gamedata as of 2022-10-22 csgo update
