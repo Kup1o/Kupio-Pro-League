@@ -513,12 +513,12 @@ public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2){
 }
 
 public CaptainMenuForAdmin(client){
-	Menu menu = new Menu(Handler_ChooseCaptain_Question);
+	Handle menu = new Menu(Handler_ChooseCaptain_Question, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Question", client);
 	AddMenuItem(menu, "Y", "yes", client);
 	AddMenuItem(menu, "N", "no", client);
-	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, 60);
 }
 
 public CT_ChooseCaptainForAdmin(client){
