@@ -581,7 +581,7 @@ public Handler_ChooseCaptain_Question(Handle menu, MenuAction action, param1, pa
 			if (StrEqual(info, "Y")){
 				ManualCaptain = true;
 				CaptainMenu = true;
-				CT_ChooseCaptainForAdmin(param1);
+				CT_ChooseCaptainForAdminMenu(param1);
 			}
 			
 			else if (StrEqual(info, "N")){
