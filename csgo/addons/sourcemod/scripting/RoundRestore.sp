@@ -62,8 +62,8 @@ public void GameRestartChanged(Handle convar, const char[] oldValue, const char[
 		prevRound = 0;
 
 		char buffer[255];
-		Format(buffer, sizeof(buffer), "%s Starting Game", ChatPrefix0);
-		CPrintToChatAll("%s Starting Game", ChatPrefix0);		
+		Format(buffer, sizeof(buffer), "%t", "Starting Game", ChatPrefix0);
+		CPrintToChatAll("%t", "Starting Game", ChatPrefix0);		
 	}	
 }
 

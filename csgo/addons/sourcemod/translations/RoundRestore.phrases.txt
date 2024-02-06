@@ -88,4 +88,10 @@
 		"#format"	"{1:s},{2:s}"
 		"en"	"{1} You have selected round {2}"
 	}
+
+	"Starting Game"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} Starting Game"
+	}
 }
