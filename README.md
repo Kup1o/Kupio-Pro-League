@@ -1,5 +1,5 @@
 # Kupio-Pro-League
-Kupio Pro League is a standalone SourceMod plugins bundle for managing competitive matches on Counter‑Strike: Global Offensive servers. It is originally based on [Simple Match Plugin](https://forums.alliedmods.net/showthread.php?s=fdf09df7b7dcec7d312688cbd7a5c24e) on the 20th of June at 2020.
+Kupio Pro League is a standalone SourceMod plugins bundle for managing competitive matches on Counter‑Strike: Global Offensive servers. It is originally based on [Simple Match Plugin](https://forums.alliedmods.net/showthread.php?t=280614) on the 20th of June at 2020.
 
 ## Status: Supported.
 Development paused pending more information about CS2.
