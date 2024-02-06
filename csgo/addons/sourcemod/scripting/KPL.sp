@@ -1,9 +1,9 @@
-#pragma semicolon 1 // 2327
+#pragma semicolon 1
 #pragma tabsize 0
 
 #define DEBUG
 #define PLUGIN_AUTHOR "kup1o"
-#define PLUGIN_VERSION "3.1.1"
+#define PLUGIN_VERSION "1.0.0"
 #define NONE 0
 #define SPEC 1
 #define TEAM1 2
