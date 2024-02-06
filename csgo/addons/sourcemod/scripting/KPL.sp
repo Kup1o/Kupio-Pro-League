@@ -374,7 +374,7 @@ public SetTeamMenu(client){
 		AddMenuItem(menu, ClientUserID, ClientName);
 	}
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2){
@@ -403,13 +403,13 @@ public Handler_SetTeamMenu(Handle menu, MenuAction action, param1, param2){
 }
 
 public SetTeamMenu_TeamSelect(client){
-	Handle menu = CreateMenu(Handler_SetTeamMenu_TeamSelect);
+	Handle menu = CreateMenu(Handler_SetTeamMenu_TeamSelect, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Set Team Select Menu", client);
 	AddMenuItem(menu, "CT", "CT", client);
 	AddMenuItem(menu, "T", "T", client);
 	AddMenuItem(menu, "SPEC", "Spec", client);
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_SetTeamMenu_TeamSelect(Handle menu, MenuAction action, param1, param2){
@@ -482,7 +482,7 @@ public SpecMenu(client){
 		AddMenuItem(menu, ClientUserID, ClientName);
 	}
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2){
@@ -513,7 +513,7 @@ public Handler_SpecMenu(Handle menu, MenuAction action, param1, param2){
 }
 
 public CaptainMenuForAdmin(client){
-	Handle menu = new Menu(Handler_ChooseCaptain_Question, MENU_ACTIONS_ALL);
+	Handle menu = CreateMenu(Handler_ChooseCaptain_Question, MENU_ACTIONS_ALL);
 	SetMenuTitle(menu, "Manual Captain Question", client);
 	AddMenuItem(menu, "Y", "yes", client);
 	AddMenuItem(menu, "N", "no", client);
@@ -539,7 +539,7 @@ public CT_ChooseCaptainForAdmin(client){
 		AddMenuItem(menu, CT_ClientUserID, CT_ClientName);
 	}
 	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public T_ChooseCaptainForAdmin(client){
@@ -560,7 +560,7 @@ public T_ChooseCaptainForAdmin(client){
 		AddMenuItem(menu, T_ClientUserID, T_ClientName);
 	}
 	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_ChooseCaptain_Question(Handle menu, MenuAction action, param1, param2){
@@ -682,7 +682,7 @@ public CT_ChooseCaptainForAdminMenu(client){
 		AddMenuItem(menu, CT_ClientUserID, CT_ClientName);
 	}
 	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public T_ChooseCaptainForAdminMenu(client){
@@ -703,7 +703,7 @@ public T_ChooseCaptainForAdminMenu(client){
 		AddMenuItem(menu, T_ClientUserID, T_ClientName);
 	}
 	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_ChooseCaptain_CT_From_AdminMenu(Handle menu, MenuAction action, param1, param2){
@@ -1019,7 +1019,7 @@ public SwapMenu(client){
 		AddMenuItem(menu, ClientUserID, ClientName);
 	}
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_SwapMenu(Handle menu, MenuAction action, param1, param2){
@@ -1086,7 +1086,7 @@ public ExchangePlayersMenu(client){
 		AddMenuItem(menu, ClientUserID, ClientName);
 	}
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_ExchangePlayersMenu(Handle menu, MenuAction action, param1, param2){
@@ -1129,7 +1129,7 @@ public ExchangePlayersMenu_ExchangeWith(client){
 		AddMenuItem(menu, ClientUserID, ClientName);
 	}
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	DisplayMenu(menu, client, 60);
 }
 
 public Handler_ExchangePlayersMenu_ExchangeWith(Handle menu, MenuAction action, param1, param2){
